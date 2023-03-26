@@ -1,0 +1,16 @@
+[package]
+name = "subcase"
+description = "Deduplicate unit test code in Rust without fixtures"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.60"
+authors = ["Mishmish Dev <mishmish@mishmish.dev>"]
+repository = "https://github.com/mishmish-dev/subcase"
+license = "Apache-2.0"
+categories = ["development-tools::testing"]
+keywords = ["macros", "section", "subcase", "catch2", "testing"]
+
+[lib]
+crate-type = ["lib"]
+
+
