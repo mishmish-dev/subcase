@@ -4,7 +4,7 @@
 
 <!-- cargo-rdme start -->
 
-# Intuitive way to deduplicate your tests code
+# Share parts of your test case intuitively
 
 ## What is a subcase?
 
@@ -46,7 +46,8 @@ with_subcases! {
 with first `subcase!{{...}}` block, ignoring the second,
 and vice versa.
 
-That's not all! Subcases can be nested!
+That's not all! Subcases can be nested! Replace the body
+with this code:
 ```rust
 let mut v = vec![1,2,3];   
 subcase! {{
@@ -72,11 +73,11 @@ subcase! {{
 }}
 assert_eq!(v.len(), 4);
 ```
-In this example, test function body is executed 3 times: once
+Test function body is executed 3 times: once
 for each of leaf subcases (i.e. not containing more nested subcases),
 while the big parent subcase is entered twice.
 
-You can write only one subcase or no subcases at all --- function
+You can write only one subcase or no subcases at all, function
 will run as usual.
 
 ## Other oprions?

@@ -1,7 +1,7 @@
 [package]
 name = "subcase"
-description = "Deduplicate unit test code in Rust without fixtures"
-version = "0.2.0"
+description = "Share parts of your test case intuitively"
+version = "0.2.1"
 edition = "2021"
 rust-version = "1.56.1"
 authors = ["Mishmish Dev <mishmish@mishmish.dev>"]
