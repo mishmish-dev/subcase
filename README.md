@@ -1,3 +1,5 @@
+<!-- this file is generated automatically with cargo-rdme tool -->
+
 [![crates.io](https://img.shields.io/crates/v/subcase?style=for-the-badge&color=blue)](https://crates.io/crates/subcase)
 
 <!-- cargo-rdme start -->
@@ -82,7 +84,6 @@ will run as usual.
 Indeed, there are already a few crates that implement the concept
 of subcases:
 + [rust-catch](https://crates.io/crates/rust-catch)
-+ [rye](https://crates.io/crates/rye)
 + [crossroads](https://crates.io/crates/crossroads)
 
 What distinguishes subcase crate from each of them, is that
@@ -96,18 +97,25 @@ to the mentioned crates.
 
 ## Limitations
 
-Probably most of these limitations will be (partially) lifted in
-the future, stay tuned.
+One technical consequence of how the crate was
+implemented is that subcases from one test function can't run
+in parallel. This may or may not slow down your tests' execution.
+If you have a lot of fine-grained test cases, you should be fine.
 
-+ As of current version, Rust builtin testing framework cannot help you
-know what exact path of execution has failed. Also, as different
-branches of evaluation are switched at runtime, you possibly can
-trigger borrow checker.
+Another thing is that nesting subcases is limited. Currently the hard
+upper bound is 16. (I think, it's not practical to have more than two
+level of subcases.)
 
+Also, as different branches of evaluation are switched at runtime,
+you possibly can trigger borrow checker.
+
+
+There are also limitations that potentially will be lifted in the
+future:
++ Rust built-in testing framework cannot help you
+know what exact path of execution has failed.
 + Only `()`-returning functions are supported.
-
 + You must use double pair of braces with inner `subcase!` macro.
-
 + You cannot rename the inner `subcase!` macro.
 
 ## License

@@ -1,10 +1,10 @@
 /// Allows to fork a function's execution
 /// to create multiple paths which share code, for example,
 /// test case setup/teardown.
-/// 
+///
 /// Macro body can contain one or more function definition.
 /// Functions are restricted to not to return anything.
-/// 
+///
 /// For usage, please refer to the crate doc.
 #[macro_export]
 macro_rules! with_subcases {
@@ -20,8 +20,8 @@ macro_rules! with_subcases {
             $( #[$meta] )*
             $vis fn $name ( $( $arg : $arg_t ),* ) {
 
-                let mut exec_path = $crate::detail::TreePath::new();
-                let mut state = $crate::detail::SubcasesState::default();
+                let mut exec_path = $crate::detail::TreePath::default();
+                let mut state = $crate::detail::State::default();
 
                 macro_rules! subcase {
                     ($block:block) => {
