@@ -64,7 +64,7 @@
 //!        v.extend_from_slice(&[4,5,6,7,8]);
 //!     }}
 //!     assert_eq!(v.len(), 6);
-//! 
+//!
 //!     v.pop();
 //!     v.pop();
 //! }}
@@ -75,18 +75,17 @@
 //! In this example, test function body is executed 3 times: once
 //! for each of leaf subcases (i.e. not containing more nested subcases),
 //! while the big parent subcase is entered twice.
-//! 
+//!
 //! You can write only one subcase or no subcases at all --- function
 //! will run as usual.
-//! 
+//!
 //! ## Other oprions?
 //!
 //! Indeed, there are already a few crates that implement the concept
 //! of subcases:
 //! + [rust-catch](https://crates.io/crates/rust-catch)
-//! + [rye](https://crates.io/crates/rye)
 //! + [crossroads](https://crates.io/crates/crossroads)
-//! 
+//!
 //! What distinguishes subcase crate from each of them, is that
 //! subcase only uses lightweight declarative (i.e. `macro_rules!`)
 //! macros and has zero dependencies. Also, `with_subcases` macro stuffs
@@ -97,26 +96,34 @@
 //! (I will provide actual benchmarks in the future.)
 //!
 //! ## Limitations
-//! 
-//! Probably most of these limitations will be (partially) lifted in
-//! the future, stay tuned.
 //!
-//! + As of current version, Rust builtin testing framework cannot help you
-//! know what exact path of execution has failed. Also, as different
-//! branches of evaluation are switched at runtime, you possibly can
-//! trigger borrow checker.
-//! 
+//! One technical consequence of how the crate was
+//! implemented is that subcases from one test function can't run
+//! in parallel. This may or may not slow down your tests' execution.
+//! If you have a lot of fine-grained test cases, you should be fine.
+//!
+//! Another thing is that nesting subcases is limited. Currently the hard
+//! upper bound is 16. (I think, it's not practical to have more than two
+//! level of subcases.)
+//!
+//! Also, as different branches of evaluation are switched at runtime,
+//! you possibly can trigger borrow checker.
+//!
+//!
+//! There are also limitations that potentially will be lifted in the
+//! future:
+//! + Rust built-in testing framework cannot help you
+//! know what exact path of execution has failed.
 //! + Only `()`-returning functions are supported.
-//! 
 //! + You must use double pair of braces with inner `subcase!` macro.
-//! 
 //! + You cannot rename the inner `subcase!` macro.
-//! 
+//!
 //! ## License
-//! 
+//!
 //! Licensed under MIT License.
 
 #![deny(missing_docs)]
+#![no_std]
 
 /// Defines the sole public macro [with_subcases]
 pub mod macro_def;
