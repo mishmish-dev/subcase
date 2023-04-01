@@ -84,7 +84,7 @@
 //!
 //! Indeed, there are already a few crates that implement the concept
 //! of subcases:
-//! + [rust-catch](https://crates.io/crates/rust-catch)
+//! + [rust-catch](https://github.com/guydunton/rust-catch)
 //! + [crossroads](https://crates.io/crates/crossroads)
 //!
 //! What distinguishes subcase crate from each of them, is that
