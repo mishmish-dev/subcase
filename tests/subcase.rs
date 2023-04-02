@@ -1,4 +1,9 @@
+#![allow(unused_macros)]
+
 use subcase::with_subcases;
+
+#[derive(Debug)]
+struct ER{}
 
 with_subcases! {
     #[test]
@@ -62,5 +67,10 @@ with_subcases! {
         }}
 
         assert_eq!(v.len(), 5);
+    }
+
+    #[test]
+    fn returning_result() -> Result<(), ER> {
+        Ok(())
     }
 }

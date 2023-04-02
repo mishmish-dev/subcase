@@ -115,7 +115,6 @@
 //! future:
 //! + Rust built-in testing framework cannot help you
 //! know what exact path of execution has failed.
-//! + Only `()`-returning functions are supported.
 //! + You must use double pair of braces with inner `subcase!` macro.
 //! + You cannot rename the inner `subcase!` macro.
 //!

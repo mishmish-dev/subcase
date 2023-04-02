@@ -1,7 +1,7 @@
 [package]
 name = "subcase"
 description = "Share parts of your test case intuitively"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 rust-version = "1.56.1"
 authors = ["Mishmish Dev <mishmish@mishmish.dev>"]
@@ -12,5 +12,3 @@ keywords = ["testing", "macros", "section", "subcase", "catch2"]
 
 [lib]
 crate-type = ["lib"]
-
-

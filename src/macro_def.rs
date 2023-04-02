@@ -11,14 +11,16 @@ macro_rules! with_subcases {
     (
         $(
             $( #[$meta:meta] )*
-            $vis:vis fn $name:ident ( $( $arg:ident : $arg_t:ty ),* $(,)? ) {
+            $vis:vis fn $name:ident ( $( $arg:ident : $arg_t:ty ),* $(,)? )
+            $( -> $ret_t:ty )?
+            {
                 $($body:tt)*
             }
         )+
     ) => {
         $(
             $( #[$meta] )*
-            $vis fn $name ( $( $arg : $arg_t ),* ) {
+            $vis fn $name ( $( $arg : $arg_t ),* ) $( -> $ret_t )? {
 
                 let mut exec_path = $crate::detail::TreePath::default();
                 let mut state = $crate::detail::State::default();
@@ -32,16 +34,21 @@ macro_rules! with_subcases {
                     }
                 }
 
-                let mut first = true;
-                while first || !exec_path.is_empty() {
-                    {
-                        $($body)*
-                    }
+                let mut ret $(: $ret_t)? = {
+                    $($body)*
+                };
+                state.update_exec_path(&mut exec_path);
+                state.clear();
 
+                let mut first = true;
+                while !exec_path.is_empty() {
+                    ret = {
+                        $($body)*
+                    };
                     state.update_exec_path(&mut exec_path);
                     state.clear();
-                    first = false;
                 }
+                ret
             }
         )+
     }
