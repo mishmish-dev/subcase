@@ -103,9 +103,10 @@ implemented is that subcases from one test function can't run
 in parallel. This may or may not slow down your tests' execution.
 If you have a lot of fine-grained test cases, you should be fine.
 
-Another thing is that nesting subcases is limited. Currently the hard
-upper bound is 16. (I think, it's not practical to have more than two
-level of subcases.)
+Another thing is that nesting subcases is limited. The reason is
+to not allocate memory during test. Currently the hard limit
+on subcase nestedness is 16. (I think, it's not practical to have
+more than two level of subcases.)
 
 Also, as different branches of evaluation are switched at runtime,
 you possibly can trigger borrow checker.
@@ -115,7 +116,6 @@ There are also limitations that potentially will be lifted in the
 future:
 + Rust built-in testing framework cannot help you
 know what exact path of execution has failed.
-+ You must use double pair of braces with inner `subcase!` macro.
 + You cannot rename the inner `subcase!` macro.
 
 ## License
