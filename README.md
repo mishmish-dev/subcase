@@ -27,15 +27,15 @@ with_subcases! {
     fn my_test_case() {
         let mut v = vec![1,2,3];
         
-        subcase! {{
+        subcase! {
             v.push(9);
             assert_eq!(v.last().unwrap().clone(), 9);
-        }}
-        subcase! {{
+        }
+        subcase! {
             v.clear();
             assert!(v.is_empty());
             for _i in 0..4 { v.push(1); }
-        }}
+        }
         
         assert_eq!(v.len(), 4);
         assert!(v.capacity() >= 4);
@@ -50,27 +50,27 @@ That's not all! Subcases can be nested! Replace the body
 with this code:
 ```rust
 let mut v = vec![1,2,3];   
-subcase! {{
+subcase! {
     v.push(9);
-}}
-subcase! {{
+}
+subcase! {
     v.clear();
 
-    subcase! {{
+    subcase! {
         for _i in 0..5 { v.push(1); }
         assert_eq!(v.len(), 5);
-    }}
+    }
    
     v.push(100);
    
-    subcase! {{
+    subcase! {
        v.extend_from_slice(&[4,5,6,7,8]);
-    }}
+    }
     assert_eq!(v.len(), 6);
 
     v.pop();
     v.pop();
-}}
+}
 assert_eq!(v.len(), 4);
 ```
 Test function body is executed 3 times: once
@@ -110,13 +110,6 @@ more than two level of subcases.)
 
 Also, as different branches of evaluation are switched at runtime,
 you possibly can trigger borrow checker.
-
-
-There are also limitations that potentially will be lifted in the
-future:
-+ Rust built-in testing framework cannot help you
-know what exact path of execution has failed.
-+ You cannot rename the inner `subcase!` macro.
 
 ## License
 

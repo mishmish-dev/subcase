@@ -21,15 +21,15 @@
 //!     fn my_test_case() {
 //!         let mut v = vec![1,2,3];
 //!         
-//!         subcase! {{
+//!         subcase! {
 //!             v.push(9);
 //!             assert_eq!(v.last().unwrap().clone(), 9);
-//!         }}
-//!         subcase! {{
+//!         }
+//!         subcase! {
 //!             v.clear();
 //!             assert!(v.is_empty());
 //!             for _i in 0..4 { v.push(1); }
-//!         }}
+//!         }
 //!         
 //!         assert_eq!(v.len(), 4);
 //!         assert!(v.capacity() >= 4);
@@ -48,27 +48,27 @@
 //! #     #[test]
 //! #     fn my_tremendous_test_case() {
 //! let mut v = vec![1,2,3];   
-//! subcase! {{
+//! subcase! {
 //!     v.push(9);
-//! }}
-//! subcase! {{
+//! }
+//! subcase! {
 //!     v.clear();
 //!
-//!     subcase! {{
+//!     subcase! {
 //!         for _i in 0..5 { v.push(1); }
 //!         assert_eq!(v.len(), 5);
-//!     }}
+//!     }
 //!    
 //!     v.push(100);
 //!    
-//!     subcase! {{
+//!     subcase! {
 //!        v.extend_from_slice(&[4,5,6,7,8]);
-//!     }}
+//!     }
 //!     assert_eq!(v.len(), 6);
 //!
 //!     v.pop();
 //!     v.pop();
-//! }}
+//! }
 //! assert_eq!(v.len(), 4);
 //! # }
 //! # }
@@ -111,13 +111,6 @@
 //! Also, as different branches of evaluation are switched at runtime,
 //! you possibly can trigger borrow checker.
 //!
-//!
-//! There are also limitations that potentially will be lifted in the
-//! future:
-//! + Rust built-in testing framework cannot help you
-//! know what exact path of execution has failed.
-//! + You cannot rename the inner `subcase!` macro.
-//!
 //! ## License
 //!
 //! Licensed under MIT License.
@@ -125,8 +118,33 @@
 #![deny(missing_docs)]
 #![no_std]
 
-/// Defines the sole public macro [with_subcases]
-pub mod macro_def;
+/// Allows you to change name for the inner subcase nacro
+/// by defining your own version of [`with_subcases!`].
+/// You can add attributes and documentation to
+/// the produced outer macro.
+#[macro_export]
+macro_rules! def_custom_macro {
+    (
+        $(#[$meta:meta])*
+        $name:ident($custom_subcase:ident)
+    ) => {
+        $crate::__detail_macro! (@def_custom_macro $name $custom_subcase [$] $($meta)*);
+    };
+}
+
+def_custom_macro! {
+    /// Allows you to fork function execution and
+    /// run different flow paths. For usage, consult the crade documentation.
+    #[macro_export]
+    with_subcases(subcase)
+}
+
+def_custom_macro! {
+    /// The Catch2 flavour of [`with_subcases!`]. Use `section!`
+    /// for the inner macro 
+    #[macro_export]
+    with_sections(section)
+}
 
 #[doc(hidden)]
-pub mod detail;
+pub mod __detail;
