@@ -11,10 +11,10 @@ macro_rules! __detail_macro {
             };
         }
     };
-    (@def_inner_macro $name:ident $exec_path:ident $state:ident [$dollar:tt]) => {
+    (@def_inner_macro $name:ident $state:ident [$dollar:tt]) => {
         macro_rules! $name {
             ($dollar ($body:tt)*) => {
-                if $state.enter_subcase(&mut $exec_path) {
+                if $state.enter_subcase() {
                     $dollar ($body)*
                 };
                 $state.exit_subcase();
@@ -25,7 +25,7 @@ macro_rules! __detail_macro {
         @transform_fn $custom_subcase:ident
         $(
             $( #[$meta:meta] )*
-            $vis:vis fn $name:ident ( $( $arg:ident : $arg_t:ty ),* $(,)? )
+            $vis:vis fn $name:ident( $( $arg:ident : $arg_t:ty ),* $(,)? )
             $( -> $ret_t:ty )?
             {
                 $($body:tt)*
@@ -34,26 +34,21 @@ macro_rules! __detail_macro {
     ) => {
         $(
             $( #[$meta] )*
-            $vis fn $name ( $( $arg : $arg_t ),* ) $( -> $ret_t )? {
+            $vis fn $name( $( $arg : $arg_t ),* ) $( -> $ret_t )? {
+                use $crate::__detail::State;
+                let mut state = State::default();
 
-                let mut exec_path = $crate::__detail::TreePath::default();
-                let mut state = $crate::__detail::State::default();
-
-                $crate::__detail_macro! { @def_inner_macro $custom_subcase exec_path state [$] };
-
-                let mut ret $(: $ret_t)? = {
+                fn run_one_exec_path( state: &mut State, $( $arg : $arg_t ),* ) $( -> $ret_t )? {
+                    $crate::__detail_macro! { @def_inner_macro $custom_subcase state [$] };
                     $($body)*
-                };
-                state.update_exec_path(&mut exec_path);
-                state.clear();
+                }
 
-                let mut first = true;
-                while !exec_path.is_empty() {
-                    ret = {
-                        $($body)*
-                    };
-                    state.update_exec_path(&mut exec_path);
-                    state.clear();
+                let mut ret = run_one_exec_path(&mut state, $( $arg ),*);
+                state.update_exec_path();
+
+                while !state.is_done() {
+                    ret = run_one_exec_path(&mut state, $( $arg ),*);
+                    state.update_exec_path();
                 }
                 ret
             }
