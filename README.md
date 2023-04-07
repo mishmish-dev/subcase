@@ -29,7 +29,7 @@ with_subcases! {
         
         subcase! {
             v.push(9);
-            assert_eq!(v.last().unwrap().clone(), 9);
+            assert_eq!(v[3], 9);
         }
         subcase! {
             v.clear();
@@ -46,32 +46,35 @@ with_subcases! {
 with first `subcase!{...}` block, ignoring the second,
 and vice versa.
 
-That's not all! Subcases can be nested! Replace the body
-with this code:
+That's not all! Subcases can be nested!
 ```rust
-let mut v = vec![1,2,3];   
-subcase! {
-    v.push(9);
-}
-subcase! {
-    v.clear();
-
-    subcase! {
-        for _i in 0..5 { v.push(1); }
-        assert_eq!(v.len(), 5);
+use subcase::with_subcases;
+with_subcases! {
+    #[test]
+    fn my_tremendous_test_case() {
+        let mut v = vec![1,2,3];   
+        subcase! {
+            v.push(9);
+        }
+        subcase! {
+            v.clear();
+            v.push(100);
+    
+            subcase! {
+                for _i in 0..5 { v.push(1); }
+                assert_eq!(v.len(), 5);
+            }
+            subcase! {
+               v.extend_from_slice(&[4,5,6,7,8]);
+            }
+            assert_eq!(v.len(), 6);
+    
+            v.pop();
+            v.pop();
+        }
+        assert_eq!(v.len(), 4);
     }
-   
-    v.push(100);
-   
-    subcase! {
-       v.extend_from_slice(&[4,5,6,7,8]);
-    }
-    assert_eq!(v.len(), 6);
-
-    v.pop();
-    v.pop();
 }
-assert_eq!(v.len(), 4);
 ```
 Test function body is executed 3 times: once
 for each of leaf subcases (i.e. not containing more nested subcases),
