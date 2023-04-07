@@ -3,7 +3,7 @@
 use subcase::with_subcases;
 
 #[derive(Debug)]
-struct ER{}
+struct ER {}
 
 with_subcases! {
     #[test]
@@ -61,6 +61,7 @@ with_subcases! {
 
         subcase! {
             v.push(4);
+            v.push(4);
         }
         subcase! {
             v.push(5);
@@ -70,7 +71,13 @@ with_subcases! {
     }
 
     #[test]
-    fn returning_result() -> Result<(), ER> {
+    fn returning_ok() -> Result<(), ER> {
         Ok(())
+    }
+
+    #[test]
+    #[should_panic]
+    fn returning_error() -> Result<(), ER> {
+        Err(ER{})
     }
 }

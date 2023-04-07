@@ -43,7 +43,7 @@ with_subcases! {
 }
 ```
 `my_test_case`'s body will be executed twice, first time
-with first `subcase!{{...}}` block, ignoring the second,
+with first `subcase!{...}` block, ignoring the second,
 and vice versa.
 
 That's not all! Subcases can be nested! Replace the body
@@ -102,11 +102,6 @@ One technical consequence of how the crate was
 implemented is that subcases from one test function can't run
 in parallel. This may or may not slow down your tests' execution.
 If you have a lot of fine-grained test cases, you should be fine.
-
-Another thing is that nesting subcases is limited. The reason is
-to not allocate memory during test. Currently the hard limit
-on subcase nestedness is 16. (I think, it's not practical to have
-more than two level of subcases.)
 
 Also, as different branches of evaluation are switched at runtime,
 you possibly can trigger borrow checker.

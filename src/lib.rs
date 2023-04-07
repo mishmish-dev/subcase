@@ -37,7 +37,7 @@
 //! }
 //! ```
 //! `my_test_case`'s body will be executed twice, first time
-//! with first `subcase!{{...}}` block, ignoring the second,
+//! with first `subcase!{...}` block, ignoring the second,
 //! and vice versa.
 //!
 //! That's not all! Subcases can be nested! Replace the body
@@ -103,11 +103,6 @@
 //! in parallel. This may or may not slow down your tests' execution.
 //! If you have a lot of fine-grained test cases, you should be fine.
 //!
-//! Another thing is that nesting subcases is limited. The reason is
-//! to not allocate memory during test. Currently the hard limit
-//! on subcase nestedness is 16. (I think, it's not practical to have
-//! more than two level of subcases.)
-//!
 //! Also, as different branches of evaluation are switched at runtime,
 //! you possibly can trigger borrow checker.
 //!
@@ -116,7 +111,6 @@
 //! Licensed under MIT License.
 
 #![deny(missing_docs)]
-#![no_std]
 
 /// Allows you to change name for the inner subcase nacro
 /// by defining your own version of [`with_subcases!`].
@@ -141,10 +135,16 @@ def_custom_macro! {
 
 def_custom_macro! {
     /// The Catch2 flavour of [`with_subcases!`]. Use `section!`
-    /// for the inner macro 
+    /// for the inner macro
     #[macro_export]
     with_sections(section)
 }
+
+/// Defines [`ErrTestable`] trait for checking returned
+/// values for errors, and implements it for
+/// [`Result<T, E>`], [`Option<T>`] and [`()`](unit).
+pub mod err_testable;
+pub use err_testable::ErrTestable;
 
 #[doc(hidden)]
 pub mod __detail;
