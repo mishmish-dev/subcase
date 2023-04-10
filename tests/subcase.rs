@@ -1,18 +1,13 @@
-#![allow(unused_macros)]
-
 use subcase::with_subcases;
-
-#[derive(Debug)]
-struct ER {}
 
 with_subcases! {
     #[test]
     fn my_test_case() {
         let mut v = vec![1,2,3];
 
-        subcase! {
+        subcase! { ~"hi"
             v.push(9);
-            assert_eq!(v.last().unwrap().clone(), 9);
+            assert_eq!(v[3], 9);
         }
         subcase! {
             v.clear();
@@ -59,25 +54,20 @@ with_subcases! {
     fn test_two() {
         let mut v = vec![1,2,3];
 
-        subcase! {
+        subcase! { ~"must succeed"
             v.push(4);
             v.push(4);
         }
         subcase! {
-            v.push(5);
+            subcase! { ~"xxx"
+                v.push(5);
+                v.push(5);
+            }
+            subcase! { ~"must fail"
+                v.push(5);
+            }
         }
 
         assert_eq!(v.len(), 5);
-    }
-
-    #[test]
-    fn returning_ok() -> Result<(), ER> {
-        Ok(())
-    }
-
-    #[test]
-    #[should_panic]
-    fn returning_error() -> Result<(), ER> {
-        Err(ER{})
     }
 }

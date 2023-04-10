@@ -1,6 +1,6 @@
 <!-- this file is generated automatically with cargo-rdme tool -->
 
-[![crates.io](https://img.shields.io/crates/v/subcase?style=for-the-badge&color=blue)](https://crates.io/crates/subcase)
+[![crates.io](https://img.shields.io/crates/v/subcase?style=for-the-badge\&color=blue)](https://crates.io/crates/subcase)
 
 <!-- cargo-rdme start -->
 
@@ -8,7 +8,7 @@
 
 ## What is a subcase?
 
-*Sections*, or *subcases* are a cool feature of unit testing frameworks,
+_Sections_, or _subcases_ are a cool feature of unit testing frameworks,
 such as (awesome) C++ libraries [Catch2](https://github.com/catchorg/Catch2)
 and [doctest](https://github.com/doctest/doctest).
 Subcases provide an easy way to share code between tests,
@@ -27,11 +27,11 @@ with_subcases! {
     fn my_test_case() {
         let mut v = vec![1,2,3];
         
-        subcase! {
+        subcase! { ~"single push"
             v.push(9);
             assert_eq!(v[3], 9);
         }
-        subcase! {
+        subcase! { ~"clear then push"
             v.clear();
             assert!(v.is_empty());
             for _i in 0..4 { v.push(1); }
@@ -53,18 +53,17 @@ with_subcases! {
     #[test]
     fn my_tremendous_test_case() {
         let mut v = vec![1,2,3];   
-        subcase! {
+        subcase! { ~"single push"
             v.push(9);
         }
-        subcase! {
+        subcase! { ~"clear, push, pop"
             v.clear();
             v.push(100);
     
-            subcase! {
+            subcase! { ~"push in for loop"
                 for _i in 0..5 { v.push(1); }
-                assert_eq!(v.len(), 5);
             }
-            subcase! {
+            subcase! { ~"extend from slice"
                v.extend_from_slice(&[4,5,6,7,8]);
             }
             assert_eq!(v.len(), 6);
@@ -83,12 +82,12 @@ while the big parent subcase is entered twice.
 You can write only one subcase or no subcases at all, function
 will run as usual.
 
-## Other oprions?
+## Technical approach and limitations
 
 Indeed, there are already a few crates that implement the concept
 of subcases:
-+ [rust-catch](https://github.com/guydunton/rust-catch)
-+ [crossroads](https://crates.io/crates/crossroads)
+- [rust-catch](https://github.com/guydunton/rust-catch)
+- [crossroads](https://crates.io/crates/crossroads)
 
 What distinguishes subcase crate from each of them, is that
 subcase only uses lightweight declarative (i.e. `macro_rules!`)
@@ -97,20 +96,30 @@ all execution paths inside one function, instead of generating
 many. These making it very easy on Rust compiler, in comparison
 to the mentioned crates.
 
-(I will provide actual benchmarks in the future.)
+In `subcase`'s approach, subcases discovery and switching between them
+happens serially at runtime.
 
-## Limitations
-
-One technical consequence of how the crate was
-implemented is that subcases from one test function can't run
-in parallel. This may or may not slow down your tests' execution.
+One consequence of this is that different branches of a test case
+can't run in parallel. This may or may not slow your tests down.
 If you have a lot of fine-grained test cases, you should be fine.
 
-Also, as different branches of evaluation are switched at runtime,
-you possibly can trigger borrow checker.
+Another consequence is that you generally cannot resume a test case
+when one of the execution paths failed. If it failed with a panic,
+`subcase` will report what chain of subcases caused that.
+
+## Changelog
+
+You can read the changelog [here][changelog]. It follows
+[Common Changelog][common-changelog] style guide and is written
+with the help of [hallmark tool][hallmark]. 
 
 ## License
 
-Licensed under MIT License.
+Licensed under [MIT License][license].
+
+[changelog]: https://github.com/mishmish-dev/subcase/blob/main/CHANGELOG.md
+[common-changelog]: https://common-changelog.org
+[hallmark]: https://github.com/vweevers/hallmark
+[license]: https://github.com/mishmish-dev/subcase/blob/main/LICENSE.txt
 
 <!-- cargo-rdme end -->
